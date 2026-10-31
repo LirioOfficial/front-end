@@ -1,0 +1,11 @@
+**/node_modules/
+**/.env
+**/.env.*
+!**/.env.example
+**/secrets/
+**/*.pem
+**/*.key
+**/uploads/
+.DS_Store
+.next/
+node_modules/
