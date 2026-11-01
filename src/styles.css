@@ -1,6 +1,4 @@
-/* ==========================================
-   FONTES
-========================================== */
+/* Fontes */
 
 @font-face {
   font-family: Montserrat;
@@ -26,9 +24,7 @@
   font-weight: 400;
 }
 
-/* ==========================================
-   CONFIGURAÇÕES GERAIS
-========================================== */
+/* Configurações gerais */
 
 * {
   box-sizing: border-box;
@@ -56,9 +52,7 @@ body {
   min-height: 100dvh;
 }
 
-/* ==========================================
-   ESTRUTURA DO APLICATIVO
-========================================== */
+/* Estrutura do aplicativo */
 
 .mobile {
   width: 390px;
@@ -94,9 +88,7 @@ body {
   padding: 16px 13px 90px;
 }
 
-/* ==========================================
-   MENU INFERIOR
-========================================== */
+/* Menu inferior */
 
 .bottom-nav {
   position: fixed;
@@ -155,9 +147,7 @@ body {
   border-radius: 50%;
 }
 
-/* ==========================================
-   LOGIN
-========================================== */
+/* Login */
 
 .login-screen {
   background: #fff;
@@ -207,9 +197,7 @@ body {
   font-size: 12px;
 }
 
-/* ==========================================
-   BOTÕES
-========================================== */
+/* Botões */
 
 .btn {
   border: 0;
@@ -249,9 +237,7 @@ body {
   flex: 1;
 }
 
-/* ==========================================
-   INÍCIO
-========================================== */
+/* Início */
 
 .boas-vindas {
   padding: 8px 11px 9px;
@@ -267,7 +253,7 @@ body {
   color: #667;
 }
 
-/* DASHBOARD */
+/* Dashboard */
 
 .painel {
   background: #fff;
@@ -293,7 +279,6 @@ body {
   background: #e6f2f6;
   border-radius: 12px;
   padding: 10px 15px;
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -305,9 +290,16 @@ body {
   height: 27px;
   object-fit: contain;
   margin-bottom: 4px;
+  filter: brightness(0) saturate(100%) invert(37%) sepia(96%)
+    saturate(1300%) hue-rotate(158deg) brightness(92%) contrast(102%);
+}
 
-  filter: brightness(0) saturate(100%) invert(37%) sepia(96%) saturate(1300%)
-    hue-rotate(158deg) brightness(92%) contrast(102%);
+/* Ícone da tartaruga */
+
+.metricas > div:nth-child(2) img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .metricas strong {
@@ -323,47 +315,7 @@ body {
   font-weight: 400;
 }
 
-/* GRÁFICO */
-
-.grafico {
-  height: 267px;
-}
-
-.grafico h3 small {
-  float: right;
-  font-size: 10px;
-}
-
-.barras {
-  height: 205px;
-  display: flex;
-  align-items: end;
-  justify-content: space-around;
-  padding: 18px 0 0;
-}
-
-.barras div {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: end;
-  gap: 8px;
-}
-
-.barras i {
-  display: block;
-  width: 18px;
-  border-radius: 5px 5px 0 0;
-  background: #0783ad;
-}
-
-.barras small {
-  font-size: 10px;
-}
-/* ==========================================
-   GRÁFICO
-========================================== */
+/* Gráfico */
 
 .grafico {
   height: 267px;
@@ -402,9 +354,7 @@ body {
   font-size: 10px;
 }
 
-/* ==========================================
-   ATIVIDADES RECENTES
-========================================== */
+/* Atividades recentes */
 
 .atividade h3 a {
   float: right;
@@ -443,9 +393,7 @@ body {
   color: #333;
 }
 
-/* ==========================================
-   REGISTROS
-========================================== */
+/* Registros */
 
 .busca-card {
   background: #fff;
@@ -535,9 +483,7 @@ body {
   color: #667;
 }
 
-/* ==========================================
-   CADASTRO DE TARTARUGAS
-========================================== */
+/* Cadastro de tartarugas */
 
 .etapas {
   display: flex;
@@ -647,9 +593,7 @@ body {
   accent-color: #15bfae;
 }
 
-/* ==========================================
-   SELETOR DE ESPÉCIE
-========================================== */
+/* Seletor de espécie */
 
 .seletor-especie {
   position: relative;
@@ -666,69 +610,36 @@ body {
   align-items: center;
   justify-content: space-between;
   background: #fff;
-  color: #101820;
   border: 1px solid #c8c8c8;
   border-radius: 8px;
-  font-family: Montserrat, sans-serif;
-  font-size: 13px;
-  text-align: left;
+  font: 13px Montserrat;
   cursor: pointer;
-  transition:
-    border-color 0.2s,
-    background 0.2s;
 }
 
-.seletor-especie-botao:hover {
-  background: #e6f3fa;
-}
-
-.seletor-especie-botao.aberto {
-  border-color: #15bfae;
-  border-radius: 8px 8px 0 0;
-}
-
-.seletor-especie-seta {
-  font-size: 18px;
-  transition: transform 0.2s;
-}
-
-.seletor-especie-seta.rotacionada {
-  transform: rotate(180deg);
-}
-
-.seletor-especie-opcoes {
+.seletor-especie-lista {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 2px);
   left: 0;
   width: 100%;
-  max-height: 230px;
-  overflow-y: auto;
   background: #fff;
   border: 1px solid #c8c8c8;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  z-index: 200;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 20;
 }
 
 .seletor-especie-opcao {
   width: 100%;
   min-height: 38px;
-  padding: 9px 13px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   background: #fff;
-  color: #101820;
-  border: none;
-  border-bottom: 3px solid transparent;
-  font-family: Montserrat, sans-serif;
-  font-size: 13px;
-  font-weight: 400;
+  border: 0;
   text-align: left;
+  font: 13px Montserrat;
   cursor: pointer;
-  transition:
-    background 0.15s,
-    color 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
 
 .seletor-especie-opcao:hover {
@@ -748,9 +659,7 @@ body {
   outline-offset: -2px;
 }
 
-/* ==========================================
-   MONITORAMENTO
-========================================== */
+/* Monitoramento */
 
 .camera-titulo {
   background: #15bfae;
@@ -821,9 +730,7 @@ body {
   width: 100%;
 }
 
-/* ==========================================
-   PERFIL
-========================================== */
+/* Perfil */
 
 .subtitulo {
   text-align: center;
@@ -866,9 +773,7 @@ body {
   padding: 0;
   background: transparent;
   color: #15bfae;
-  font:
-    13px Montserrat,
-    sans-serif;
+  font: 13px Montserrat, sans-serif;
   cursor: pointer;
 }
 
@@ -883,6 +788,7 @@ body {
   font-size: 12px;
   font-weight: 700;
 }
+
 .perfil-edicao input {
   width: 100%;
   padding: 10px;
@@ -890,6 +796,7 @@ body {
   border-radius: 8px;
   font: inherit;
 }
+
 .perfil-edicao .dupla {
   margin-top: 8px;
 }
@@ -905,15 +812,11 @@ body {
   font-weight: 700;
   background: transparent;
   border: 0;
-  font:
-    700 15px Montserrat,
-    sans-serif;
+  font: 700 15px Montserrat, sans-serif;
   cursor: pointer;
 }
 
-/* ==========================================
-   MAPA
-========================================== */
+/* Mapa */
 
 .mapa {
   height: calc(100vh - 160px);
@@ -948,9 +851,7 @@ body {
   font-size: 13px;
 }
 
-/* ==========================================
-   CADASTRO DE USUÁRIO
-========================================== */
+/* Cadastro de usuário */
 
 .titulo-cadastro {
   margin-top: 25vh;
@@ -958,9 +859,7 @@ body {
   color: #0783ad;
 }
 
-/* ==========================================
-   RESPONSIVIDADE
-========================================== */
+/* Responsividade */
 
 @media (max-width: 390px) {
   .mobile {
@@ -989,7 +888,7 @@ body {
   }
 }
 
-/* ROLAGEM */
+/* Rolagem */
 
 html {
   scrollbar-gutter: stable;
@@ -1003,7 +902,7 @@ body {
   min-height: 100vh;
 }
 
-/* CENTRALIZAÇÃO */
+/* Centralização */
 
 .mobile {
   width: 390px;
@@ -1012,7 +911,7 @@ body {
   margin: 0 auto;
 }
 
-/* MAPA */
+/* Mapa com imagem e câmeras */
 
 .mapa-tela {
   width: calc(100% + 26px);
@@ -1071,7 +970,7 @@ body {
   display: block;
 }
 
-/* MONITORAMENTO */
+/* Tela de monitoramento */
 
 .monitoramento-titulo {
   background: #15bfae;
@@ -1231,7 +1130,7 @@ body {
   margin-top: 12px;
 }
 
-/* BOTÃO PARA AMPLIAR A CÂMERA */
+/* Botão para ampliar a câmera */
 
 .botao-expandir-camera {
   position: absolute;
@@ -1275,7 +1174,7 @@ body {
   height: 48px;
 }
 
-/* CAMADAS DE DETECÇÃO */
+/* Camadas de detecção */
 
 .video-container {
   position: relative;
@@ -1305,7 +1204,7 @@ body {
   z-index: 4;
 }
 
-/* CÂMERA AMPLIADA */
+/* Câmera ampliada */
 
 .video-container.camera-expandida {
   position: fixed;
@@ -1336,8 +1235,7 @@ body {
   height: 48px;
 }
 
-
-/* LISTA DE REGISTROS */
+/* Lista de registros */
 
 .lista-registros {
   display: flex;
@@ -1352,7 +1250,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #ffffff;
+  background: #fff;
   border-radius: 12px;
   position: relative;
 }
@@ -1375,13 +1273,13 @@ body {
 }
 
 .registro-conteudo strong {
-  color: #222222;
+  color: #222;
   font-size: 11px;
   font-weight: 600;
 }
 
 .registro-conteudo small {
-  color: #555555;
+  color: #555;
   font-size: 8px;
   line-height: 1.3;
 }
@@ -1398,7 +1296,7 @@ body {
 .registro-detalhes {
   align-self: flex-start;
   flex-shrink: 0;
-  color: #222222;
+  color: #222;
   font-size: 8px;
   text-decoration: underline;
   white-space: nowrap;
