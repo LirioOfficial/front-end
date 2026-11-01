@@ -1,4 +1,6 @@
+
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import Layout from "../componentes/Layout";
 import { api } from "../servicos/api";
 import { useAuth } from "../contexto/AuthContext";
@@ -10,8 +12,33 @@ const filtros = [
   ["Encalhes", "Encalhe"],
 ];
 
+function obterImagem(registro) {
+  const imagem =
+    registro.imagem?.url ||
+    registro.imagemUrl ||
+    registro.foto?.url ||
+    registro.foto ||
+    registro.imageUrl ||
+    registro.imagem;
+
+  return typeof imagem === "string" && imagem
+    ? imagem
+    : "/imgs/toruga-cinza.png";
+}
+
+function formatarData(data) {
+  if (!data) return "";
+
+  const dataValida = new Date(data);
+
+  if (Number.isNaN(dataValida.getTime())) return "";
+
+  return dataValida.toLocaleDateString("pt-BR");
+}
+
 export default function Registros() {
-  const { token } = useAuth();
+  const { token, ready } = useAuth();
+
   const [lista, setLista] = useState([]);
   const [busca, setBusca] = useState("");
   const [filtro, setFiltro] = useState("");
@@ -19,36 +46,55 @@ export default function Registros() {
   const [erro, setErro] = useState("");
 
   useEffect(() => {
-    if (!token) return;
+    if (!ready) return;
+
+    if (!token) {
+      setCarregando(false);
+      return;
+    }
+
     api("/tartarugas", { token })
-      .then(setLista)
+      .then((dados) => {
+        setLista(Array.isArray(dados) ? dados : []);
+      })
       .catch((error) => setErro(error.message))
       .finally(() => setCarregando(false));
-  }, [token]);
+  }, [token, ready]);
 
   const filtrados = useMemo(
     () =>
       lista.filter((registro) => {
-        const corresponde = !filtro || registro.tipoOcorrencia === filtro;
-        const texto = [registro.identificacao, registro.local, registro.especie]
+        const corresponde =
+          !filtro || registro.tipoOcorrencia === filtro;
+
+        const texto = [
+          registro.identificacao,
+          registro.local,
+          registro.especie,
+        ]
           .join(" ")
           .toLocaleLowerCase("pt-BR");
+
         return (
-          corresponde && texto.includes(busca.trim().toLocaleLowerCase("pt-BR"))
+          corresponde &&
+          texto.includes(busca.trim().toLocaleLowerCase("pt-BR"))
         );
       }),
-    [lista, filtro, busca],
+    [lista, filtro, busca]
   );
 
   return (
     <Layout titulo="Registros" ativo="/registros">
+
       <div className="busca-card">
         <label>Acompanhar registros</label>
+
         <input
           placeholder="⌕  Buscar por ID, praia ou espécie"
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
         />
+
         <div className="filtros">
           {filtros.map(([nome, valor]) => (
             <button
@@ -62,11 +108,13 @@ export default function Registros() {
           ))}
         </div>
       </div>
+
       {erro && (
         <p className="erro" role="alert">
           {erro}
         </p>
       )}
+
       {carregando ? (
         <p className="vazio">Carregando registros...</p>
       ) : filtrados.length === 0 ? (
@@ -77,35 +125,77 @@ export default function Registros() {
         </p>
       ) : (
         <div className="lista-registros">
-          {filtrados.map((registro) => (
-            <article
-              className="registro"
-              key={registro._id}
-              role="link"
-              tabIndex={0}
-              onClick={() => {
-                window.location.href = `/registros/${registro._id}`;
-              }}
-              onKeyDown={(event) => {
-                if (event.key === "Enter")
-                  window.location.href = `/registros/${registro._id}`;
-              }}
-            >
-              <b>{registro.identificacao}</b>
-              <span>{registro.especie}</span>
-              <small>{registro.local || "Local não informado"}</small>
-              <small>{registro.situacao}</small>
-            </article>
-          ))}
+
+          {filtrados.map((registro) => {
+            const imagem = obterImagem(registro);
+
+            const data = formatarData(
+              registro.data || registro.createdAt
+            );
+
+            const status = registro.status || "Registrado";
+
+            return (
+              <article
+                className="registro-card"
+                key={registro._id}
+              >
+
+                <img
+                  className="registro-imagem"
+                  src={imagem}
+                  alt={registro.especie || "Imagem do registro"}
+                  onError={(e) => {
+                    e.currentTarget.src = "/imgs/toruga-cinza.png";
+                  }}
+                />
+
+                <div className="registro-conteudo">
+
+                  <strong>
+                    {registro.especie || "Espécie não identificada"}
+                  </strong>
+
+                  <small>
+                    Ocorrência #{registro.identificacao || registro._id}
+                  </small>
+
+                  <small>
+                    {registro.local || "Local não informado"}
+                  </small>
+
+                  {data && (
+                    <small>{data}</small>
+                  )}
+
+                  <span className="registro-status">
+                    {status}
+                  </span>
+
+                </div>
+
+                <Link
+                  href={`/registros/${registro._id}`}
+                  className="registro-detalhes"
+                >
+                  Ver detalhes
+                </Link>
+
+              </article>
+            );
+          })}
+
         </div>
       )}
-      <a
+
+      <Link
         className="botao-flutuante"
         href="/registrar"
         aria-label="Adicionar registro"
       >
         +
-      </a>
+      </Link>
+
     </Layout>
   );
 }
