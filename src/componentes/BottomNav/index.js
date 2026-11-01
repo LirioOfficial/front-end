@@ -3,7 +3,7 @@ import Link from "next/link";
 const itens = [
   {
     nome: "Início",
-    imagem: '/imgs/icon-ocorrencias.png',
+    imagem: '/imgs/icon-home.png',
     rota: "/home",
   },
   {
