@@ -82,7 +82,7 @@ export default function Home() {
             <span>Ocorrências</span>
           </div>
           <div>
-            <img src="/imgs/icon-tugarin.png" alt="Tartarugas" />
+            <img src="/imgs/icon-tartaruga.png" alt="Tartarugas" />
             <strong>{carregando ? "—" : dados.tartarugas.length}</strong>
             <span>Tartarugas</span>
           </div>
