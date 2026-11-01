@@ -287,9 +287,7 @@ body {
   object-fit: contain;
   margin-bottom: 4px;
   display: block;
-  filter: brightness(0) saturate(100%)
-    invert(32%) sepia(98%) saturate(1500%)
-    hue-rotate(165deg) brightness(85%) contrast(105%);
+  filter: none;
 }
 
 /* Ícone da tartaruga */
@@ -313,7 +311,6 @@ body {
   font-size: 15px;
   font-weight: 400;
 }
-
 /* Gráfico */
 
 .grafico {
