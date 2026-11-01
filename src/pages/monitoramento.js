@@ -1,9 +1,13 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../componentes/Layout';
+import { useAuth } from '../contexto/AuthContext';
+import { api } from '../servicos/api';
 
 export default function Monitoramento() {
   const router = useRouter();
+  const { token, ready } = useAuth();
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -12,11 +16,11 @@ export default function Monitoramento() {
   const processandoRef = useRef(false);
 
   const [cameraAtiva, setCameraAtiva] = useState(false);
+  const [cameraExpandida, setCameraExpandida] = useState(false);
   const [erro, setErro] = useState('');
   const [deteccoes, setDeteccoes] = useState([]);
   const [total, setTotal] = useState(0);
   const [ultimaAnalise, setUltimaAnalise] = useState(null);
-  const [modeloCarregado, setModeloCarregado] = useState(null);
 
   const cameraId = router.query.camera || 'CAM_05';
   const local = router.query.local || 'Baía dos Golfinhos';
@@ -27,6 +31,11 @@ export default function Monitoramento() {
       !canvasRef.current ||
       processandoRef.current
     ) {
+      return;
+    }
+
+    if (!ready || !token) {
+      setErro('Sessão não autenticada. Faça login novamente.');
       return;
     }
 
@@ -59,37 +68,18 @@ export default function Monitoramento() {
 
       const imagem = canvas.toDataURL('image/jpeg', 0.65);
 
-      const token = localStorage.getItem('tugarin_token');
-
-      if (!token) {
-        throw new Error('Faça login novamente para analisar as imagens.');
-      }
-
-      const resposta = await fetch('/api/imagens/analisar', {
+      const dados = await api('/imagens/analisar', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          imagem
-        })
+        token,
+        body: JSON.stringify({ imagem })
       });
-
-      const dados = await resposta.json();
-
-      if (!resposta.ok) {
-        throw new Error(
-          dados.erro || 'Não foi possível analisar a imagem.'
-        );
-      }
 
       const resultados = dados.predictions || [];
 
       setDeteccoes(resultados);
       setTotal(dados.count ?? resultados.length);
-      setModeloCarregado(true);
       setUltimaAnalise(new Date());
+      setErro('');
 
     } catch (error) {
       setErro(error.message);
@@ -102,9 +92,13 @@ export default function Monitoramento() {
     setErro('');
 
     try {
+      if (!ready || !token) {
+        throw new Error('Faça login novamente para utilizar o monitoramento.');
+      }
+
       if (!navigator.mediaDevices?.getUserMedia) {
         throw new Error(
-          'Seu navegador não permite acessar a câmera neste endereço. Utilize HTTPS ou localhost.'
+          'Acesse pelo HTTPS ou localhost para utilizar a câmera.'
         );
       }
 
@@ -162,6 +156,7 @@ export default function Monitoramento() {
     }
 
     setCameraAtiva(false);
+    setCameraExpandida(false);
   }
 
   useEffect(() => {
@@ -188,7 +183,11 @@ export default function Monitoramento() {
 
       <div className="monitoramento-camera">
 
-        <div className="video-container">
+        <div
+          className={`video-container ${
+            cameraExpandida ? 'camera-expandida' : ''
+          }`}
+        >
 
           <video
             ref={videoRef}
@@ -201,10 +200,9 @@ export default function Monitoramento() {
           {!cameraAtiva && (
             <div className="camera-placeholder">
               <img
-                src="/imgs/camera-01.png"
+                src="/imgs/loc-cameras.png"
                 alt="Câmera"
               />
-
               <span>Câmera desligada</span>
             </div>
           )}
@@ -214,6 +212,19 @@ export default function Monitoramento() {
               ● Ao vivo
             </span>
           )}
+
+          <button
+            type="button"
+            className="botao-expandir-camera"
+            onClick={() => setCameraExpandida(!cameraExpandida)}
+            aria-label={
+              cameraExpandida
+                ? 'Reduzir câmera'
+                : 'Ampliar câmera'
+            }
+          >
+            {cameraExpandida ? '✕' : '⛶'}
+          </button>
 
         </div>
 
@@ -275,10 +286,6 @@ export default function Monitoramento() {
           </div>
 
         </div>
-
-        {modeloCarregado === false && (
-          <p>Modelo de identificação não carregado.</p>
-        )}
 
         {deteccoes.length > 0 ? (
           <div className="lista-deteccoes">

@@ -1,5 +1,6 @@
+
 const API_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+  process.env.NEXT_PUBLIC_API_URL || ""
 ).replace(/\/$/, "");
 
 export class ApiError extends Error {
@@ -12,7 +13,11 @@ export class ApiError extends Error {
 
 export async function api(path, { token, ...options } = {}) {
   const headers = new Headers(options.headers || {});
-  if (token) headers.set("Authorization", `Bearer ${token}`);
+
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
   if (
     options.body &&
     !(options.body instanceof FormData) &&
@@ -20,26 +25,45 @@ export async function api(path, { token, ...options } = {}) {
   ) {
     headers.set("Content-Type", "application/json");
   }
+
   let response;
+
   try {
-    response = await fetch(`${API_URL}/api${path}`, { ...options, headers });
+    response = await fetch(
+      `${API_URL}/api${path}`,
+      {
+        ...options,
+        headers
+      }
+    );
   } catch {
     throw new ApiError(
       "Não foi possível conectar à API. Confira se o backend está iniciado.",
-      0,
+      0
     );
   }
+
   const data = await response.json().catch(() => ({}));
+
   if (!response.ok) {
-    if (response.status === 401 && token && typeof window !== "undefined") {
+    if (
+      response.status === 401 &&
+      token &&
+      typeof window !== "undefined"
+    ) {
       window.localStorage.removeItem("tugarin.session");
-      window.dispatchEvent(new Event("tugarin:session-expired"));
+
+      window.dispatchEvent(
+        new Event("tugarin:session-expired")
+      );
     }
+
     throw new ApiError(
       data.erro || "A solicitação não foi concluída.",
-      response.status,
+      response.status
     );
   }
+
   return data;
 }
 
