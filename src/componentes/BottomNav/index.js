@@ -3,22 +3,22 @@ import Link from "next/link";
 const itens = [
   {
     nome: "Início",
-    imagem: '/imgs/icon-home.png',
+    imagem: "/imgs/icon-home.svg",
     rota: "/home",
   },
   {
     nome: "Ocorrências",
-    imagem: "/imgs/icon-ocorrencias.png",
+    imagem: "/imgs/icon-ocorrencias-branco.svg",
     rota: "/ocorrencias",
   },
   {
     nome: "Tugarin",
-    imagem: "/imgs/icon-tugarin.png",
+    imagem: "/imgs/icon-tugarin.svg",
     rota: "/registros",
   },
   {
     nome: "Mapa",
-    imagem: "/imgs/icon-mapa.png",
+    imagem: "/imgs/icon-mapa.svg",
     rota: "/mapa",
   },
   {
@@ -36,7 +36,9 @@ export default function BottomNav({ ativo }) {
           href={item.rota}
           key={item.nome}
           scroll={false}
-          className={`nav-item ${ativo === item.rota ? "ativo" : ""}`}
+          className={`nav-item ${
+            ativo === item.rota ? "ativo" : ""
+          }`}
         >
           <img src={item.imagem} alt={item.nome} />
         </Link>

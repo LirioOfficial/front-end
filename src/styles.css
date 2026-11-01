@@ -104,20 +104,9 @@ body {
   z-index: 100;
 }
 
-.nav-item {
-  width: 20%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  background: transparent;
-  border: none;
-}
-
 .nav-item img[src*="icon-home"] {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
 
@@ -125,18 +114,17 @@ body {
   width: 32px;
   height: 32px;
   object-fit: contain;
-  transform: scale(1.15);
 }
 
 .nav-item img[src*="icon-tugarin"] {
-  width: 43px;
-  height: 30px;
+  width: 42.2px;
+  height: 29px;
   object-fit: contain;
 }
 
 .nav-item img[src*="icon-mapa"] {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
 
@@ -1309,4 +1297,14 @@ body {
 
 .registro-card a:active {
   opacity: 0.7;
+}
+
+/* Ícones da navegação inferior */
+
+.bottom-nav .nav-item img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
