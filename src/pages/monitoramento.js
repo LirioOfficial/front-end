@@ -1,120 +1,321 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Layout from "../componentes/Layout";
-import CameraCapture from "../componentes/CameraCapture";
-import { api } from "../servicos/api";
-import { useAuth } from "../contexto/AuthContext";
-
-const idDe = (value) => String(value?._id || value || "");
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import Layout from '../componentes/Layout';
 
 export default function Monitoramento() {
   const router = useRouter();
-  const { token } = useAuth();
-  const [camera, setCamera] = useState(null);
-  const [deteccoes, setDeteccoes] = useState([]);
-  const [erro, setErro] = useState("");
-  const [carregando, setCarregando] = useState(true);
-  const cameraId = router.query.id;
 
-  useEffect(() => {
-    if (!router.isReady) return;
-    if (!cameraId) {
-      router.replace("/mapa");
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null);
+  const intervaloRef = useRef(null);
+  const processandoRef = useRef(false);
+
+  const [cameraAtiva, setCameraAtiva] = useState(false);
+  const [erro, setErro] = useState('');
+  const [deteccoes, setDeteccoes] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [ultimaAnalise, setUltimaAnalise] = useState(null);
+  const [modeloCarregado, setModeloCarregado] = useState(null);
+
+  const cameraId = router.query.camera || 'CAM_05';
+  const local = router.query.local || 'Baía dos Golfinhos';
+
+  async function analisarImagem() {
+    if (
+      !videoRef.current ||
+      !canvasRef.current ||
+      processandoRef.current
+    ) {
       return;
     }
-    if (!token) return;
-    setCarregando(true);
-    Promise.all([
-      api(`/monitoramento/${encodeURIComponent(cameraId)}`, { token }),
-      api("/deteccoes", { token }),
-    ])
-      .then(([selected, allDeteccoes]) => {
-        setCamera(selected);
-        setDeteccoes(
-          allDeteccoes.filter(
-            (item) => idDe(item.monitoramento) === idDe(selected._id),
-          ),
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+
+    if (!video.videoWidth || !video.videoHeight) {
+      return;
+    }
+
+    processandoRef.current = true;
+
+    try {
+      const largura = Math.min(video.videoWidth, 640);
+      const proporcao = video.videoHeight / video.videoWidth;
+      const altura = Math.round(largura * proporcao);
+
+      canvas.width = largura;
+      canvas.height = altura;
+
+      const contexto = canvas.getContext('2d');
+
+      contexto.drawImage(
+        video,
+        0,
+        0,
+        largura,
+        altura
+      );
+
+      const imagem = canvas.toDataURL('image/jpeg', 0.65);
+
+      const token = localStorage.getItem('tugarin_token');
+
+      if (!token) {
+        throw new Error('Faça login novamente para analisar as imagens.');
+      }
+
+      const resposta = await fetch('/api/imagens/analisar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          imagem
+        })
+      });
+
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        throw new Error(
+          dados.erro || 'Não foi possível analisar a imagem.'
         );
-      })
-      .catch((error) => setErro(error.message))
-      .finally(() => setCarregando(false));
-  }, [router.isReady, cameraId, token, router]);
+      }
+
+      const resultados = dados.predictions || [];
+
+      setDeteccoes(resultados);
+      setTotal(dados.count ?? resultados.length);
+      setModeloCarregado(true);
+      setUltimaAnalise(new Date());
+
+    } catch (error) {
+      setErro(error.message);
+    } finally {
+      processandoRef.current = false;
+    }
+  }
+
+  async function iniciarCamera() {
+    setErro('');
+
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error(
+          'Seu navegador não permite acessar a câmera neste endereço. Utilize HTTPS ou localhost.'
+        );
+      }
+
+      const permissao = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: {
+            ideal: 'environment'
+          },
+          width: {
+            ideal: 1280
+          },
+          height: {
+            ideal: 720
+          }
+        }
+      });
+
+      streamRef.current = permissao;
+      videoRef.current.srcObject = permissao;
+
+      await videoRef.current.play();
+
+      setCameraAtiva(true);
+
+      intervaloRef.current = setInterval(() => {
+        analisarImagem();
+      }, 2500);
+
+    } catch (error) {
+      setErro(
+        error.name === 'NotAllowedError'
+          ? 'Permita o acesso à câmera nas configurações do navegador.'
+          : error.message
+      );
+    }
+  }
+
+  function encerrarCamera() {
+    if (intervaloRef.current) {
+      clearInterval(intervaloRef.current);
+      intervaloRef.current = null;
+    }
+
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+
+      streamRef.current = null;
+    }
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+
+    setCameraAtiva(false);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (intervaloRef.current) {
+        clearInterval(intervaloRef.current);
+      }
+
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => {
+          track.stop();
+        });
+      }
+    };
+  }, []);
 
   return (
-    <Layout titulo="Monitoramento" ativo="/mapa">
-      {carregando ? (
-        <p className="vazio">Carregando câmera...</p>
-      ) : erro ? (
-        <p className="erro" role="alert">
-          {erro}
-        </p>
-      ) : (
-        camera && (
-          <>
-            <div className="camera-titulo">
-              {camera.nome}
-              <small>{camera.identificacao}</small>
+    <Layout titulo="Monitoramento" ativo="/monitoramento">
+
+      <div className="monitoramento-titulo">
+        <strong>{local}</strong>
+        <small>{cameraId}</small>
+      </div>
+
+      <div className="monitoramento-camera">
+
+        <div className="video-container">
+
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            className="video-camera"
+          />
+
+          {!cameraAtiva && (
+            <div className="camera-placeholder">
+              <img
+                src="/imgs/camera-01.png"
+                alt="Câmera"
+              />
+
+              <span>Câmera desligada</span>
             </div>
-            <div className="camera-card">
-              <div className="camera-imagem">
-                <span className="live">
-                  ● {camera.estadoConexao || "desconectada"}
-                </span>
-                {camera.imagemAtual ? (
-                  <img
-                    src={camera.imagemAtual}
-                    alt={`Imagem atual de ${camera.nome}`}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      opacity: 1,
-                    }}
-                  />
-                ) : (
-                  <span>Transmissão indisponível</span>
-                )}
-              </div>
-              <div className="camera-info">
-                <span>
-                  {[camera.local, camera.cidade, camera.estado]
-                    .filter(Boolean)
-                    .join(" · ") || "Local não cadastrado"}
-                </span>
+          )}
+
+          {cameraAtiva && (
+            <span className="camera-live">
+              ● Ao vivo
+            </span>
+          )}
+
+        </div>
+
+        <canvas
+          ref={canvasRef}
+          className="canvas-analise"
+        />
+
+        <div className="monitoramento-info">
+          <span>Cananéia - SP</span>
+
+          <small>
+            {ultimaAnalise
+              ? `Última análise: ${ultimaAnalise.toLocaleTimeString('pt-BR')}`
+              : 'Aguardando câmera'}
+          </small>
+        </div>
+
+        <p className="status-camera">
+          {cameraAtiva
+            ? 'Câmera conectada'
+            : 'Câmera desconectada'}
+        </p>
+
+        {erro && (
+          <p className="erro-camera">
+            {erro}
+          </p>
+        )}
+
+        <button
+          type="button"
+          className="btn verde botao-camera"
+          onClick={cameraAtiva ? encerrarCamera : iniciarCamera}
+        >
+          {cameraAtiva ? 'Encerrar câmera' : 'Iniciar câmera'}
+        </button>
+
+      </div>
+
+      <div className="painel atividade-deteccao">
+
+        <h3>Atividade recente</h3>
+
+        <div className="dados-deteccao">
+
+          <div>
+            <small>Detecções recentes</small>
+            <strong>{total}</strong>
+          </div>
+
+          <div>
+            <small>Última análise</small>
+            <strong>
+              {ultimaAnalise
+                ? ultimaAnalise.toLocaleTimeString('pt-BR')
+                : '—'}
+            </strong>
+          </div>
+
+        </div>
+
+        {modeloCarregado === false && (
+          <p>Modelo de identificação não carregado.</p>
+        )}
+
+        {deteccoes.length > 0 ? (
+          <div className="lista-deteccoes">
+            {deteccoes.map((item, index) => (
+              <div className="deteccao-item" key={index}>
+                <strong>
+                  {item.class || item.label || 'Tartaruga detectada'}
+                </strong>
+
                 <small>
-                  {camera.ultimaAtualizacao
-                    ? `Atualizado: ${new Date(camera.ultimaAtualizacao).toLocaleString("pt-BR")}`
-                    : "Sem atualização registrada"}
+                  Confiança: {(
+                    (item.confidence || 0) * 100
+                  ).toFixed(1)}%
                 </small>
               </div>
-            </div>
-            <div className="painel">
-              <h3>Atividade recente</h3>
-              {deteccoes.length ? (
-                deteccoes.slice(0, 5).map((item) => (
-                  <p key={item._id}>
-                    {item.especieDetectada || "Detecção"} ·{" "}
-                    {new Date(item.dataDeteccao).toLocaleString("pt-BR")} ·{" "}
-                    {item.statusRevisao}
-                  </p>
-                ))
-              ) : (
-                <p>Nenhuma detecção vinculada a esta câmera.</p>
-              )}
-              <p>Ocorrências relacionadas: sem associação disponível na API.</p>
-            </div>
-            <h3 className="subtitulo">Câmera do dispositivo</h3>
-            <CameraCapture token={token} />
-            <button
-              className="btn contorno"
-              type="button"
-              onClick={() => router.push("/mapa")}
-            >
-              Voltar ao mapa
-            </button>
-          </>
-        )
-      )}
+            ))}
+          </div>
+        ) : (
+          <p className="sem-deteccoes">
+            {cameraAtiva
+              ? 'Nenhuma tartaruga identificada na última análise.'
+              : 'Inicie a câmera para começar a análise.'}
+          </p>
+        )}
+
+      </div>
+
+      <h3 className="subtitulo">
+        Ocorrências anteriores
+      </h3>
+
+      <div className="registro">
+        <b>Tartaruga adulta</b>
+        <small>Ocorrência #003 · Baía dos Golfinhos - Cananéia</small>
+        <small>Pendente</small>
+      </div>
+
     </Layout>
   );
 }

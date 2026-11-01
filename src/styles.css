@@ -1011,3 +1011,222 @@ body {
   min-height: 100vh;
   margin: 0 auto;
 }
+
+/* MAPA */
+
+.mapa-tela {
+  width: calc(100% + 26px);
+  height: calc(100dvh - 125px);
+  min-height: 450px;
+  margin: -16px -13px -90px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mapa-imagem {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.mapa-fundo {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+}
+
+.mapa-busca {
+  position: absolute;
+  top: 14px;
+  left: 4%;
+  width: 92%;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: #fff;
+  border-radius: 9px;
+  z-index: 2;
+}
+
+.marcador-camera {
+  position: absolute;
+  width: 40px;
+  height: 46px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 3;
+}
+
+.marcador-camera img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* MONITORAMENTO */
+
+.monitoramento-titulo {
+  background: #15bfae;
+  color: #fff;
+  border-radius: 11px;
+  text-align: center;
+  padding: 8px;
+  margin: 0 7px 10px;
+}
+
+.monitoramento-titulo strong,
+.monitoramento-titulo small {
+  display: block;
+}
+
+.monitoramento-titulo strong {
+  font-size: 13px;
+}
+
+.monitoramento-titulo small {
+  font-size: 11px;
+}
+
+.monitoramento-camera {
+  background: #fff;
+  border-radius: 12px;
+  padding: 7px;
+  margin-bottom: 15px;
+}
+
+.video-container {
+  height: 220px;
+  width: 100%;
+  background: #d4e4e6;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.video-camera {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transform: none;
+}
+
+.camera-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #667;
+  font-size: 12px;
+}
+
+.camera-placeholder img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  opacity: 0.6;
+}
+
+.camera-live {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #222;
+  color: #fff;
+  border-radius: 12px;
+  padding: 4px 8px;
+  font-size: 10px;
+}
+
+.canvas-analise {
+  display: none;
+}
+
+.monitoramento-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 5px 3px;
+  font-size: 10px;
+}
+
+.monitoramento-info small {
+  color: #777;
+}
+
+.status-camera {
+  color: #159447;
+  font-size: 10px;
+  margin: 5px;
+}
+
+.erro-camera {
+  color: #c22;
+  font-size: 11px;
+  margin: 7px 5px;
+}
+
+.botao-camera {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.atividade-deteccao {
+  margin-top: 12px;
+}
+
+.dados-deteccao {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.dados-deteccao div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dados-deteccao small {
+  color: #666;
+  font-size: 10px;
+}
+
+.dados-deteccao strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.lista-deteccoes {
+  margin-top: 12px;
+}
+
+.deteccao-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 0;
+  border-top: 1px solid #e5eeee;
+  font-size: 11px;
+}
+
+.deteccao-item small {
+  color: #0783ad;
+}
+
+.sem-deteccoes {
+  font-size: 11px;
+  color: #666;
+  margin-top: 12px;
+}
