@@ -214,6 +214,11 @@ body {
   flex: 1;
 }
 
+/* Espaçamento do botão Cadastrar */
+.login-screen .login-form .btn {
+  margin-top: 20px;
+}
+
 .verde:hover {
   background: #10aa9c;
 }
@@ -282,8 +287,9 @@ body {
   object-fit: contain;
   margin-bottom: 4px;
   display: block;
-  filter: brightness(0) saturate(100%) invert(37%) sepia(96%)
-    saturate(1300%) hue-rotate(158deg) brightness(92%) contrast(102%);
+  filter: brightness(0) saturate(100%)
+    invert(32%) sepia(98%) saturate(1500%)
+    hue-rotate(165deg) brightness(85%) contrast(105%);
 }
 
 /* Ícone da tartaruga */
