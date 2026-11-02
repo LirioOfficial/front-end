@@ -93,6 +93,7 @@ body {
 
 
 
+
 /* SPLASH SCREEN - TUGARIN */
 
 .splash-screen {
@@ -113,19 +114,15 @@ body {
 
   transform: translate3d(-50%, 0, 0);
 
-  /* Subida suave */
-  transition: transform 500ms ease-in-out;
+  transition: transform 800ms ease-in-out;
   will-change: transform;
 }
-
-/* IMAGEM OCUPA TODA A TELA */
 
 .splash-logo {
   position: absolute;
   inset: 0;
 
   display: block;
-
   width: 100%;
   height: 100%;
 
@@ -139,12 +136,9 @@ body {
   object-position: center;
 }
 
-/* ANIMAÇÃO DE SUBIDA */
-
 .splash-screen.saindo {
   transform: translate3d(-50%, -100%, 0);
 }
-
 
 /* LOGIN COM AS MESMAS DIMENSÕES */
 

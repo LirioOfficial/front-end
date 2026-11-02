@@ -15,16 +15,16 @@ export default function Login() {
   const router = useRouter();
   const { login, ready, token } = useAuth();
 
-  // Inicia a subida quase imediatamente
+  // Inicia a subida depois de 1 segundo
   useEffect(() => {
-    const inicio = setTimeout(() => {
+    const temporizador = setTimeout(() => {
       setSaindo(true);
-    }, 50);
+    }, 1000);
 
-    return () => clearTimeout(inicio);
+    return () => clearTimeout(temporizador);
   }, []);
 
-  // Redireciona usuários autenticados após a splash terminar
+  // Redireciona usuários autenticados
   useEffect(() => {
     if (!mostrarSplash && ready && token) {
       router.replace("/home");
@@ -40,7 +40,7 @@ export default function Login() {
       await login(email, senha);
       router.push("/home");
     } catch (error) {
-      setErro(error.message);
+      setErro(error.message || "Não foi possível entrar.");
     } finally {
       setCarregando(false);
     }
@@ -48,6 +48,66 @@ export default function Login() {
 
   return (
     <>
+      {/* LOGIN: permanece montado por baixo da splash */}
+      <main
+        className="mobile login-screen"
+        aria-hidden={mostrarSplash}
+      >
+        <div className="login-logo">TUGARIN</div>
+
+        <form onSubmit={entrar} className="login-form">
+          <label htmlFor="email">E-mail</label>
+
+          <input
+            id="email"
+            type="email"
+            placeholder="Digite seu e-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={mostrarSplash}
+          />
+
+          <label htmlFor="senha">Senha</label>
+
+          <input
+            id="senha"
+            type="password"
+            placeholder="Digite sua senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+            disabled={mostrarSplash}
+          />
+
+          {erro && (
+            <p className="erro" role="alert">
+              {erro}
+            </p>
+          )}
+
+          <div className="login-actions">
+            <button
+              type="submit"
+              className="btn azul"
+              disabled={carregando || mostrarSplash}
+            >
+              {carregando ? "Entrando..." : "Acessar"}
+            </button>
+
+            <button
+              type="button"
+              className="btn verde"
+              disabled={mostrarSplash}
+              onClick={() => router.push("/cadastro-usuario")}
+            >
+              Cadastrar
+            </button>
+          </div>
+        </form>
+      </main>
+
+      {/* SPLASH: fica na frente do login */}
       {mostrarSplash && (
         <div
           className={`splash-screen ${saindo ? "saindo" : ""}`}
@@ -61,63 +121,13 @@ export default function Login() {
           }}
         >
           <img
-            src="/imgs/Splash-screen.svg"
+            src="/imgs/splash-screen.svg"
             alt="Tugarin"
             className="splash-logo"
             loading="eager"
           />
         </div>
       )}
-
-      <main className="mobile login-screen">
-        <div className="login-logo">TUGARIN</div>
-
-        <form onSubmit={entrar} className="login-form">
-          <label htmlFor="email">E-mail</label>
-          <input
-            id="email"
-            type="email"
-            placeholder="Digite seu e-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <label htmlFor="senha">Senha</label>
-          <input
-            id="senha"
-            type="password"
-            placeholder="Digite sua senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
-
-          {erro && (
-            <p className="erro" role="alert">
-              {erro}
-            </p>
-          )}
-
-          <div className="login-actions">
-            <button
-              type="submit"
-              className="btn azul"
-              disabled={carregando}
-            >
-              {carregando ? "Entrando..." : "Acessar"}
-            </button>
-
-            <button
-              type="button"
-              className="btn verde"
-              onClick={() => router.push("/cadastro-usuario")}
-            >
-              Cadastrar
-            </button>
-          </div>
-        </form>
-      </main>
     </>
   );
 }
