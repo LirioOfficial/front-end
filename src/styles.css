@@ -88,6 +88,83 @@ body {
   padding: 16px 13px 90px;
 }
 
+
+
+
+
+
+/* SPLASH SCREEN - TUGARIN */
+
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 50%;
+
+  width: min(390px, 100vw);
+  height: 100vh;
+  height: 100dvh;
+
+  margin: 0;
+  padding: 0;
+
+  background: #0ca9ad;
+  z-index: 9999;
+  overflow: hidden;
+
+  transform: translate3d(-50%, 0, 0);
+
+  /* Subida suave */
+  transition: transform 500ms ease-in-out;
+  will-change: transform;
+}
+
+/* IMAGEM OCUPA TODA A TELA */
+
+.splash-logo {
+  position: absolute;
+  inset: 0;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  max-width: none;
+  max-height: none;
+
+  margin: 0;
+  padding: 0;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ANIMAÇÃO DE SUBIDA */
+
+.splash-screen.saindo {
+  transform: translate3d(-50%, -100%, 0);
+}
+
+
+/* LOGIN COM AS MESMAS DIMENSÕES */
+
+.login-screen {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+
+  width: min(390px, 100vw, calc(100dvh * 390 / 844));
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 390 / 844;
+
+  margin: 0;
+  transform: translate(-50%, -50%);
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+
 /* Menu inferior */
 
 .bottom-nav {
@@ -1305,9 +1382,45 @@ body {
 /* Ícones da navegação inferior */
 
 .bottom-nav .nav-item img {
-  width: 30px;
-  height: 30px;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+/* Início */
+.nav-item img[src*="icon-home"] {
+  width: 32px;
+  height: 32px;
+}
+
+/* Ocorrências */
+.nav-item img[src*="icon-ocorrencias"] {
+  width: 32px;
+  height: 32px;
+}
+
+/* Tugarin */
+.nav-item img[src*="icon-tugarin"] {
+  width: 42.2px;
+  height: 29px;
+}
+
+/* Mapa */
+.nav-item img[src*="icon-mapa"] {
+  width: 32px;
+  height: 32px;
+}
+
+/* Perfil */
+.nav-item img[src*="icon-perfil"] {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+}
+
+/* Ícone selecionado */
+.bottom-nav .nav-item.ativo img {
+  opacity: 0.55;
 }
