@@ -1,6 +1,15 @@
-import { useEffect, useState } from "react";
+
 import "../styles.css";
 import { AuthProvider } from "../contexto/AuthContext";
+
+export default function App({ Component, pageProps }) {
+  return (
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
+}
+
 
 export default function App({ Component, pageProps }) {
   const [mostrarSplash, setMostrarSplash] = useState(true);
