@@ -61,7 +61,7 @@ export default function Login() {
           }}
         >
           <img
-            src="/imgs/splash-screen.svg"
+            src="/imgs/Splash-screen.svg"
             alt="Tugarin"
             className="splash-logo"
             loading="eager"
