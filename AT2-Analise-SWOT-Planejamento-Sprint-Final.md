@@ -243,3 +243,14 @@ O acompanhamento do projeto pode ser verificado por meio dos registros disponív
 - Documento de análise SWOT e planejamento da Sprint Final publicado no repositório Front-end.
 
 Esses registros permitem acompanhar as decisões de planejamento e a evolução das atividades durante o desenvolvimento do Tugarin.
+
+---
+
+## 10. Declaração de Alinhamento Estratégico do Product Owner
+
+O planejamento da Sprint Final foi definido considerando as necessidades do projeto Tugarin, priorizando funcionalidades que contribuem diretamente para a qualidade, a usabilidade e a confiabilidade do sistema.
+
+As decisões foram orientadas pela análise SWOT, pela matriz TOWS e pela priorização MoSCoW, buscando equilibrar as entregas essenciais com as limitações de tempo e recursos da equipe.
+
+A equipe considera que as atividades priorizadas estão alinhadas ao objetivo do projeto: desenvolver uma aplicação de apoio ao monitoramento de tartarugas marinhas, facilitando o registro e a organização de ocorrências e a investigação de técnicas de visão computacional.
+
