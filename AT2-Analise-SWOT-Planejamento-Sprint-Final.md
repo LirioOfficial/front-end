@@ -69,9 +69,9 @@ A partir dos fatores identificados na análise SWOT, foram estabelecidas estrat�
 | Ofensiva | Forças + Oportunidades | Aproveitar a estrutura da aplicação e a investigação com YOLOv11 para desenvolver e aperfeiçoar os recursos de monitoramento e identificação de tartarugas. |
 | Reforço | Fraquezas + Oportunidades | Ampliar o dataset de imagens anotadas, realizar novos experimentos e avaliar os resultados para identificar possibilidades de melhoria no reconhecimento. |
 | Confronto | Forças + Ameaças | Utilizar a separação entre Front-end e Back-end, a organização das atividades e os testes controlados para reduzir problemas de integração e dependência de serviços externos. |
-| Sobrevivência | Fraquezas + Ameaças | Priorizar a estabilidade das funcionalidades existentes e manter melhorias de maior complexidade, especialmente relacionadas à visão computacional, para etapas posteriores. |
+| Sobrevivência | Fraquezas + Ameaças | Priorizar a estabilidade das funcionalidades existentes e manter os experimentos de reconhecimento com miniaturas. Adiar a implantação e a validação definitiva do reconhecimento em ambiente real, devido à necessidade de ampliar o dataset, realizar novos treinamentos e avaliar o desempenho do modelo. |
 
-As estratégias definidas orientam a priorização das atividades, considerando as necessidades atuais do protótipo e as possibilidades de continuidade do desenvolvimento.
+A estratégia de sobrevivência estabelece um corte de escopo para a Sprint Final: a implantação do reconhecimento automático em praias com tartarugas reais não será considerada uma entrega obrigatória neste ciclo. Essa decisão permite concentrar os recursos disponíveis na consolidação das funcionalidades existentes e nos experimentos controlados.
 
 ---
 
@@ -99,12 +99,13 @@ Com base nas Issues registradas nos repositórios do Tugarin, as atividades acom
 | Back-end | #10 | Avaliar desempenho do modelo de detecção | Should Have |
 | Front-end | #5 | Desenvolver tela informativa sobre as espécies de tartarugas | Could Have |
 | Back-end | #8 | Ampliar dataset de imagens YOLOv11 | Could Have |
+| Back-end | #14 | Adiar implantação do reconhecimento de tartarugas em ambiente real | Won't Have |
 
 A classificação considera as labels de prioridade MoSCoW registradas nas respectivas Issues.
 
 É importante diferenciar a classificação MoSCoW do campo Priority utilizado no GitHub Projects. Enquanto MoSCoW indica a importância da funcionalidade para o escopo do projeto, Priority permite identificar o nível de urgência de cada atividade.
 
-Não foram identificadas, no conjunto de Issues apresentado, funcionalidades formalmente classificadas como Won't Have. Essa categoria permanece disponível para registrar decisões de adiamento de escopo quando necessário.
+A Issue Back-end #14 foi classificada como Won't Have para a Sprint Final, registrando o adiamento da implantação do reconhecimento automático em ambiente real. A decisão foi tomada devido à necessidade de ampliar o dataset, realizar novos treinamentos e avaliar o desempenho do modelo YOLOv11. Os experimentos com miniaturas e câmera ao vivo permanecem no escopo atual, enquanto a implantação e a validação em campo poderão ser consideradas no próximo semestre.
 
 ---
 
@@ -124,6 +125,7 @@ Durante o planejamento da Sprint Final, foram consideradas as seguintes atividad
 - Revisar os detalhes das ocorrências.
 - Aprimorar os filtros de consulta.
 - Ampliar o dataset de imagens utilizado nos experimentos de visão computacional.
+- Continuar os testes de reconhecimento com miniaturas e câmera ao vivo.
 
 As atividades foram organizadas e acompanhadas pelo GitHub Projects, considerando os respectivos status, prioridades, esforço estimado e áreas de desenvolvimento.
 
@@ -150,8 +152,9 @@ No acompanhamento registrado no GitHub Projects, foram identificadas as seguinte
 | Front-end #8 | Implementar filtros de consulta | In Review |
 | Back-end #8 | Ampliar dataset de imagens YOLOv11 | In Progress |
 | Back-end #10 | Avaliar desempenho do modelo | In Progress |
+| Back-end #14 | Adiar implantação do reconhecimento em ambiente real | Closed |
 
-Os estados apresentados representam o acompanhamento realizado no momento do registro do quadro e não significam que todas as atividades tenham sido finalizadas com a entrega acadêmica.
+Os estados apresentados representam o acompanhamento realizado no momento do registro do quadro e não significam que todas as atividades tenham sido finalizadas com a entrega acadêmica. A Issue #14 está fechada porque documenta uma decisão de adiamento de escopo, e não uma implementação pendente.
 
 ---
 
@@ -170,6 +173,7 @@ Foram considerados como pontos centrais do desenvolvimento:
 - Navegação entre as telas da aplicação.
 - Adaptação da interface para diferentes dispositivos.
 - Continuidade dos experimentos de reconhecimento utilizando YOLOv11.
+- Ampliação dos testes com miniaturas e câmera ao vivo.
 
 ### 6.2 Funcionalidades e melhorias posteriores
 
@@ -182,6 +186,9 @@ Entre os pontos que demandam evolução estão:
 - Aprimoramento da precisão da detecção.
 - Continuidade dos ajustes de responsividade.
 - Implementação e validação de funcionalidades ainda pendentes.
+- Implantação e validação do reconhecimento automático em ambiente real.
+
+A implantação do reconhecimento em praias com tartarugas reais foi retirada do escopo da Sprint Final e registrada na Issue Back-end #14 como Won't Have. Essa atividade poderá ser retomada no próximo semestre, após a ampliação do dataset e a realização de avaliações adicionais do modelo.
 
 A definição de novas atividades será realizada conforme as necessidades identificadas e o planejamento da equipe para o próximo semestre.
 
@@ -253,4 +260,3 @@ O planejamento da Sprint Final foi definido considerando as necessidades do proj
 As decisões foram orientadas pela análise SWOT, pela matriz TOWS e pela priorização MoSCoW, buscando equilibrar as entregas essenciais com as limitações de tempo e recursos da equipe.
 
 A equipe considera que as atividades priorizadas estão alinhadas ao objetivo do projeto: desenvolver uma aplicação de apoio ao monitoramento de tartarugas marinhas, facilitando o registro e a organização de ocorrências e a investigação de técnicas de visão computacional.
-
